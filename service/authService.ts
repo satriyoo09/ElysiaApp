@@ -1,7 +1,8 @@
 import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth"; // import fungsi-fungsi auth dari firebase, jangan diubah-ubah
 import { doc, setDoc } from "firebase/firestore"; // import fungsi untuk menulis data ke Firestore, jangan diubah-ubah
 import { auth, db } from "./firebase"; // import objek auth dan db dari file firebase, jangan diubah-ubah
@@ -24,3 +25,11 @@ export const registerUser = async (
 export const loginUser = async (email: string, password: string) =>
   signInWithEmailAndPassword(auth, email, password); // fungsi untuk login user dengan email dan password, kembalikan hasil dari fungsi signInWithEmailAndPassword
 export const logoutUser = () => signOut(auth);
+//kirim email reset password ke user
+export const sendResetPasswordEmail = (email: string) => {
+  try {
+    sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    console.log(error);
+  }
+};

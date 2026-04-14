@@ -9,7 +9,7 @@ export default function RootLayout() {
     if (loading) return;
     if (!user) {
       // If the user is not authenticated, redirect to the login page
-      router.replace("./auth/login");
+      router.replace("../auth/login");
     }
     // If the user is authenticated, redirect to the appropriate dashboard based on their role
     else if (role === "admin") {

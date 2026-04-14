@@ -1,21 +1,63 @@
-import { useEffect, useState } from "react";
+// hooks/useAuth.ts
 
-export function useAuth() {
-  const [user, setUser] = useState<{ id: number; name: string } | null>(null);
-  const [role, setRole] = useState<string | null>(null);
+import { onAuthStateChanged, User } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { auth, db } from "../service/firebase";
+
+// Format data user yang akan dipakai di seluruh app
+type UserData = {
+  uid: string;
+  name: string;
+  email: string;
+  role: "user" | "admin";
+};
+
+type AuthState = {
+  user: User | null; // data auth dari Firebase
+  userData: UserData | null; // data lengkap dari Firestore
+  role: "user" | "admin" | null;
+  loading: boolean;
+};
+
+export const useAuth = (): AuthState => {
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [role, setRole] = useState<"user" | "admin" | null>(null);
   const [loading, setLoading] = useState(true);
 
-  //simulasi cek logika sendiri
   useEffect(() => {
-    //simulasi api call untuk mendapatkan data user kalau perlu
-    setTimeout(() => {
-      const mockUser = { id: 1, name: "aufa rafif" }; //ganti dengan data asli nantinya
-      const mockRole = "admin"; //bisa ganti user jika sesuai dengan data aslinya
-      setUser(mockUser); // ini adalah contoh data user yang didapat dari api, nanti bisa diganti
-      setRole(mockRole); // ini adalah contoh data role yang didapat dari api, nanti bisa diganti
-      setLoading(false); // setelah data user dan role didapat, set loading ke false
-    }, 1000);
+    // onAuthStateChanged = listener otomatis dari Firebase
+    // akan dipanggil setiap kali status login berubah
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // User sedang login — ambil data lengkap dari Firestore
+        try {
+          const docRef = doc(db, "users", firebaseUser.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data() as UserData;
+            setUser(firebaseUser);
+            setUserData({ ...data, uid: firebaseUser.uid });
+            setRole(data.role);
+          }
+        } catch (error) {
+          console.error("Gagal ambil data user:", error);
+        }
+      } else {
+        // User tidak login / sudah logout
+        setUser(null);
+        setUserData(null);
+        setRole(null);
+      }
+
+      setLoading(false); // selesai cek, loading matikan
+    });
+
+    // Cleanup: hentikan listener saat komponen unmount
+    return () => unsubscribe();
   }, []);
 
-  return { user, role, loading }; // return user, role, dan loading untuk digunakan di komponen lain
-}
+  return { user, userData, role, loading };
+};
