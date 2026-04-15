@@ -1,7 +1,14 @@
+import {
+  Text,
+  TextInput,
+  View
+} from "react-native";
+
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <View>
+      <Text>Home</Text>
+      <TextInput>halo</TextInput>
+    </View>
   );
 }
