@@ -29,7 +29,7 @@ export const logoutUser = () => signOut(auth);
 export const sendResetPasswordEmail = (email: string) => {
   try {
     sendPasswordResetEmail(auth, email);
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    throw error;
   }
 };

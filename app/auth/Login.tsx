@@ -93,6 +93,10 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
+        <TouchableOpacity onPress={() => router.push("/auth/forgot_password")}>
+          <Text style={styles.forgotText}>Lupa password?</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.btnLogin, loading && { opacity: 0.7 }]}
           onPress={handleLogin}
@@ -181,5 +185,11 @@ const styles = StyleSheet.create({
   linkBold: {
     fontWeight: "800",
     color: "#fff",
+  },
+  forgotText: {
+    color: Colors.soft,
+    textAlign: "right",
+    fontSize: 13,
+    marginTop: 8,
   },
 });
