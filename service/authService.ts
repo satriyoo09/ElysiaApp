@@ -17,6 +17,7 @@ export const registerUser = async (
   await setDoc(doc(db, "users", user.uid), {
     name,
     email,
+    password,
     role: "user",
     createdAt: new Date(),
   }); // simpan data user baru ke Firestore dengan nama, email, role, dan tanggal pembuatan
