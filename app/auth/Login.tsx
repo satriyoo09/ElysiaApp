@@ -4,13 +4,13 @@ import { useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { Colors } from "../../constants/color";
 import { loginUser } from "../../service/authService";
