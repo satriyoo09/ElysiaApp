@@ -1,9 +1,13 @@
 import { router, Stack } from "expo-router";
 import { useEffect } from "react";
+import { Text, View } from "react-native";
 import { useAuth } from "../hooks/useAuth";
+import { useNetwork } from "../hooks/useNetwork";
 
 export default function RootLayout() {
   const { user, role, loading } = useAuth();
+  const { isOnline } = useNetwork();
+
   useEffect(() => {
     // This is where you can initialize any global state or perform side effects
     if (loading) return;
@@ -22,6 +26,23 @@ export default function RootLayout() {
     // You can also add additional logic here to handle other roles or edge cases
   }, [user, role, loading]);
 
-  return <Stack screenOptions={{ headerShown: false }} />;
-  // The Stack component will render the appropriate screen based on the current route
+  return (
+    <>
+      {/* Banner offline */}
+      {!isOnline && (
+        <View
+          style={{
+            backgroundColor: "#FF4444",
+            padding: 8,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "#fff", fontSize: 12, fontWeight: "700" }}>
+            Tidak ada koneksi internet
+          </Text>
+        </View>
+      )}
+      <Stack screenOptions={{ headerShown: false }} />
+    </>
+  );
 }
